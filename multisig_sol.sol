@@ -36,15 +36,18 @@ contract FederationSync {
      */
     struct ConfirmedRequestData {
         bool    transfer_made;
+        bool consensus_reached;
         bool    node_1_confirmation;
         bool    node_2_confirmation;
         bool    node_3_confirmation;
         address node_1_recipient;
         address node_2_recipient;
         address node_3_recipient;
+        address recipient_confirmed;
         uint256 node_1_amount;
         uint256 node_2_amount;
         uint256 node_3_amount;
+        uint256 amount_confirmed;
     }
 
     /**
@@ -100,17 +103,14 @@ contract FederationSync {
              } else {
             revert("Only federation nodes can confirm");
         }
-
         emit RequestConfirmed(msg.sender, recipient, amount, nonce);
 
-        if (_hasConsensus(nonce)) {
+        (bool ok, address finalRecipient, uint256 finalAmount) = _getConsensus(nonce);
+
+        if (ok) {
             req.transfer_made = true;
-            /**
-             * msg.sender inside Bridge_sol will be this contract's address,
-             * which must match Bridge_sol.multisig_contract to pass its require check.
-             */
-            IBridge(bridgeContract).Transfer(recipient, amount);
-            emit TransferExecuted(recipient, amount, nonce);
+            IBridge(bridgeContract).Transfer(finalRecipient, finalAmount);
+            emit TransferExecuted(finalRecipient, finalAmount, nonce);
         }
     }
 
@@ -141,24 +141,45 @@ contract FederationSync {
      * any two nodes are found to have submitted identical recipient and amount.
      * Called internally at the end of every confirmRequest execution.
      */
-    function _hasConsensus(uint256 nonce) internal view returns (bool) {
-        ConfirmedRequestData storage req = requests[nonce];
+function _getConsensus(uint256 nonce)
+    internal
+    view
+    returns (bool, address, uint256)
+{
+    ConfirmedRequestData storage req = requests[nonce];
 
-        if (req.node_1_confirmation && req.node_2_confirmation) {
-            if (req.node_1_recipient == req.node_2_recipient &&
-                req.node_1_amount    == req.node_2_amount) return true;
+    // node 1 + node 2
+    if (req.node_1_confirmation && req.node_2_confirmation) {
+        if (
+            req.node_1_recipient == req.node_2_recipient &&
+            req.node_1_amount    == req.node_2_amount
+        ) {
+            return (true, req.node_1_recipient, req.node_1_amount);
         }
-        if (req.node_1_confirmation && req.node_3_confirmation) {
-            if (req.node_1_recipient == req.node_3_recipient &&
-                req.node_1_amount    == req.node_3_amount) return true;
-        }
-        if (req.node_2_confirmation && req.node_3_confirmation) {
-            if (req.node_2_recipient == req.node_3_recipient &&
-                req.node_2_amount    == req.node_3_amount) return true;
-        }
-
-        return false;
     }
+
+    // node 1 + node 3
+    if (req.node_1_confirmation && req.node_3_confirmation) {
+        if (
+            req.node_1_recipient == req.node_3_recipient &&
+            req.node_1_amount    == req.node_3_amount
+        ) {
+            return (true, req.node_1_recipient, req.node_1_amount);
+        }
+    }
+
+    // node 2 + node 3
+    if (req.node_2_confirmation && req.node_3_confirmation) {
+        if (
+            req.node_2_recipient == req.node_3_recipient &&
+            req.node_2_amount    == req.node_3_amount
+        ) {
+            return (true, req.node_2_recipient, req.node_2_amount);
+        }
+    }
+
+    return (false, address(0), 0);
+}
 
     /**
      * Emitted each time a node submits its confirmation for a given nonce.
