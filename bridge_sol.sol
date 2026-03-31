@@ -12,58 +12,50 @@ interface IERC20 {
 }
 
 /**
- * @title  Simple USDC Stacks-Base Bridge
- * @author no-hive
- * @notice This contract is for testing purposes only.
- *         Production version must use SafeERC20.
+ * Simple ERC-20 Bridge
+ * 
  */
 contract Bridge_sol {
 
     /**
-     * Tracks the USDC balance held on this chain (own_balance)
-     * and the mirrored balance available on the other chain (external_balance).
+     * Owner address is the multisig wallet that controls the bridge.
+     * Federation_contract serves as a coordination space for nodes.
+     * Token address is the ERC-20 token contract on this chain.
+     * Own_balance tracks the token balance held on this chain.
+     * External_balance tracks the token balance available on the other chain.
+     * Nonce is incremented on each Deposit to uniquely identify every bridge request.
      */
+    address public owner;
+    address public federation_contract;
+    address public token;
     uint256 public own_balance;
     uint256 public external_balance;
-
-    address public owner;
-
-    /**
-     * Incremented on each Deposit to uniquely identify every bridge request.
-     * Off-chain nodes use this nonce to match events across chains.
-     */
     uint256 public nonce;
 
     /**
-     * Address of the USDC ERC-20 token contract on this chain.
+     * Sets initial variable values.
+     * Permanently stores the bridgable token address.
      */
-    address public token;
-
-    /**
-     * Address of the FederationSync multisig contract.
-     * Only this address is authorized to call Transfer().
-     */
-    address public multisig_contract;
-
-    constructor(
-        uint256 _own_balance,
-        uint256 _external_balance,
-        address _token
-    ) {
-        own_balance       = _own_balance;
-        external_balance  = _external_balance;
-        token             = _token;
-        nonce             = 0;
+    constructor(address _token) {
+        own_balance = 0;
+        external_balance = 0;
+        token = _token;
+        nonce = 0;
         owner = msg.sender;
     }
 
     /**
+     * Entry point for users who want to bridge tokens to the other chain.
+     * Pulls ERC-20 from the caller's wallet into this contract.
      * Validates that the other chain has sufficient funds to cover the transfer,
      * then updates the internal balance accounting and emits Request_Approved
      * to signal off-chain nodes to complete the transfer on the other chain.
      */
-    function BridgeRequest(uint256 amount, address recipient) internal {
+    function Deposit(uint256 amount, address recipient) external {
+        require(amount > 0, "Amount must be greater than zero");
         require(external_balance > amount, "Insufficient funds on destination chain");
+        bool success = IERC20(token).transferFrom(msg.sender, address(this), amount);
+        require(success, "transferFrom failed");
         external_balance -= amount;
         own_balance      += amount;
         nonce += 1;
@@ -71,24 +63,12 @@ contract Bridge_sol {
     }
 
     /**
-     * Entry point for users who want to bridge tokens to the other chain.
-     * Pulls USDC from the caller's wallet into this contract,
-     * then triggers BridgeRequest to update balances and notify the nodes.
-     */
-    function Deposit(uint256 amount, address recipient) external {
-        require(amount > 0, "Amount must be greater than zero");
-        bool success = IERC20(token).transferFrom(msg.sender, address(this), amount);
-        require(success, "transferFrom failed");
-        BridgeRequest(amount, recipient);
-    }
-
-    /**
-     * Called exclusively by the FederationSync multisig contract
+     * Called exclusively by the Federation contract
      * after 2-of-3 nodes reach consensus on a cross-chain transfer.
-     * Sends USDC from this contract's balance to the recipient on this chain.
+     * Sends ERC-20 token from this contract's balance to the recipient on this chain.
      */
     function Transfer(address recipient, uint256 amount) external {
-        require(owner == msg.sender, "Caller is not the owner multisig contract");
+        require(federation_contract == msg.sender, "Caller is not the federation contract");
         bool success = IERC20(token).transfer(recipient, amount);
         require(success, "Token transfer failed");
          emit Tokens_Released(amount, recipient);
