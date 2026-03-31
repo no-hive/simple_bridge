@@ -2,9 +2,10 @@
 pragma solidity ^0.8.32;
 
 /**
- * Standard ERC-20 interface. Used to interact with the USDC token contract:
- * transferFrom pulls tokens from the user into this contract on Deposit,
- * transfer sends tokens out to the recipient on Transfer.
+ * @title ERC-20 Standard Interface
+ * @notice Interface for interacting with ERC-20 tokens
+ * @dev `transferFrom` moves tokens from a user to this contract (used in Deposit),
+ *      `transfer` sends tokens from this contract to a recipient (used in Transfer)
  */
 interface IERC20 {
     function transferFrom(address from, address to, uint256 value) external returns (bool);
@@ -12,29 +13,38 @@ interface IERC20 {
 }
 
 /**
- * Simple ERC-20 Bridge
- * 
+ * @title ERC-20 Bridge Contract
+ * @author no-hive (https://github.com/no-hive)
+ * @notice Holds tokens on this chain and coordinates cross-chain transfers
+ * @dev Part of a system consisting of:
+ *      - Owner contract: multisig wallet controlling the bridge
+ *      - Federation contract: coordinates node consensus for transfers
+ *      - Bridge contract: manages token custody and transfer execution
  */
-contract Bridge_sol {
+contract Bridge {
 
-    /**
-     * Owner address is the multisig wallet that controls the bridge.
-     * Federation_contract serves as a coordination space for nodes.
-     * Token address is the ERC-20 token contract on this chain.
-     * Own_balance tracks the token balance held on this chain.
-     * External_balance tracks the token balance available on the other chain.
-     * Nonce is incremented on each Deposit to uniquely identify every bridge request.
-     */
+    /// @notice Multisig wallet address controlling the bridge
     address public owner;
+
+    /// @notice Federation contract responsible for coordinating cross-chain approvals
     address public federation_contract;
+
+    /// @notice ERC-20 token address handled by the bridge
     address public token;
+
+    /// @notice Amount of tokens held on this chain
     uint256 public own_balance;
+
+    /// @notice Amount of tokens available on the external chain
     uint256 public external_balance;
+
+    /// @notice Incremental identifier for each deposit request
     uint256 public nonce;
 
     /**
-     * Sets initial variable values.
-     * Permanently stores the bridgable token address.
+     * @notice Initializes the bridge contract
+     * @param _token Address of the ERC-20 token to be bridged
+     * @dev Sets initial balances to zero and assigns contract deployer as owner
      */
     constructor(address _token) {
         own_balance = 0;
@@ -45,90 +55,132 @@ contract Bridge_sol {
     }
 
     /**
-     * Entry point for users who want to bridge tokens to the other chain.
-     * Pulls ERC-20 from the caller's wallet into this contract.
-     * Validates that the other chain has sufficient funds to cover the transfer,
-     * then updates the internal balance accounting and emits Request_Approved
-     * to signal off-chain nodes to complete the transfer on the other chain.
+     * @notice Locks tokens on this chain and initiates a cross-chain transfer
+     * @param amount Amount of tokens to bridge
+     * @param recipient Address that will receive tokens on the destination chain
+     * @dev Requires sufficient liquidity on the external chain
+     *      Emits a Request_Approved event for off-chain processing by federation nodes
      */
     function Deposit(uint256 amount, address recipient) external {
         require(amount > 0, "Amount must be greater than zero");
         require(external_balance > amount, "Insufficient funds on destination chain");
+
         bool success = IERC20(token).transferFrom(msg.sender, address(this), amount);
         require(success, "transferFrom failed");
+
         external_balance -= amount;
         own_balance      += amount;
         nonce += 1;
-         emit Request_Approved(msg.sender, amount, recipient, nonce);
+
+        emit Request_Approved(msg.sender, amount, recipient, nonce);
     }
 
     /**
-     * Called exclusively by the Federation contract
-     * after 2-of-3 nodes reach consensus on a cross-chain transfer.
-     * Sends ERC-20 token from this contract's balance to the recipient on this chain.
+     * @notice Releases tokens to a recipient after federation approval
+     * @param recipient Address receiving the tokens
+     * @param amount Amount of tokens to transfer
+     * @dev Can only be called by the federation contract
      */
     function Transfer(address recipient, uint256 amount) external {
-        require(federation_contract == msg.sender, "Caller is not the federation contract");
+        require(federation_contract == msg.sender, "Not federation contract");
+
         bool success = IERC20(token).transfer(recipient, amount);
         require(success, "Token transfer failed");
-         emit Tokens_Released(amount, recipient);
-    }
 
-
-    function AddOwnLiquidity(uint256 amount) external onlyOwner (){
-        require(amount > 0, "Amount must be greater than zero");
-        bool success = IERC20(token).transferFrom(msg.sender, address(this), amount);
-        require(success, "transferFrom failed");
-        bool own = true;
-        own_balance += amount;
-        emit Liquidity_Changed(amount, own);
-    }
-
-    function AddExternalLiquidity(uint256 amount) external onlyOwner (){
-        require(amount > 0, "Amount must be greater than zero");
-        bool own = false;
-        external_balance += amount;
-        emit Liquidity_Changed(amount, own);
-    }
-
-
-    function ChangeOwner (address _owner) public onlyOwner {
-        owner = _owner;
-    emit Owner_Changed (block.number, msg.sender, _owner);
+        emit Tokens_Released(amount, recipient);
     }
 
     /**
-     * Emitted by BridgeRequest to notify off-chain federation nodes
-     * that a user has deposited funds and a cross-chain transfer should begin.
-     * Nodes listen for this event and call confirmRequest() on FederationSync.
+     * @notice Adds liquidity to the bridge on this chain
+     * @param amount Amount of tokens to add
+     * @dev Transfers tokens from the owner to the contract and updates internal balance
+     */
+    function AddOwnLiquidity(uint256 amount) external onlyOwner {
+        require(amount > 0, "Amount must be greater than zero");
+
+        bool success = IERC20(token).transferFrom(msg.sender, address(this), amount);
+        require(success, "transferFrom failed");
+
+        own_balance += amount;
+
+        emit Liquidity_Changed(amount, true);
+    }
+
+    /**
+     * @notice Updates liquidity available on the external chain
+     * @param amount Amount of liquidity to add
+     * @dev Does not transfer tokens, only updates internal accounting
+     */
+    function AddExternalLiquidity(uint256 amount) external onlyOwner {
+        require(amount > 0, "Amount must be greater than zero");
+
+        external_balance += amount;
+
+        emit Liquidity_Changed(amount, false);
+    }
+
+    /**
+     * @notice Updates the owner (multisig) address
+     * @param _owner New owner address
+     * @dev Used for administrative control and key rotation
+     */
+    function ChangeOwner(address _owner) public onlyOwner {
+        owner = _owner;
+
+        emit Owner_Changed(block.number, msg.sender, _owner);
+    }
+
+    /**
+     * @notice Emitted when a deposit is accepted and cross-chain transfer is initiated
+     * @param sender Address initiating the deposit
+     * @param amount Amount of tokens deposited
+     * @param recipient Destination address on the other chain
+     * @param nonce Unique identifier of the request
      */
     event Request_Approved(
         address indexed sender,
         uint256 amount,
-        address  recipient,
+        address recipient,
         uint256 nonce
     );
 
-    event Owner_Changed (
+    /**
+     * @notice Emitted when the owner address is changed
+     * @param block Block number when the change occurred
+     * @param previous_owner Previous owner address
+     * @param new_owner New owner address
+     */
+    event Owner_Changed(
         uint256 block,
-        address  previous_owner,
+        address previous_owner,
         address new_owner
     );
 
+    /**
+     * @notice Emitted when tokens are successfully released to a recipient
+     * @param amount Amount of tokens transferred
+     * @param recipient Address receiving the tokens
+     */
     event Tokens_Released(
         uint256 amount,
-        address  recipient
+        address recipient
     );
 
-        event Liquidity_Changed(
+    /**
+     * @notice Emitted when liquidity is updated
+     * @param amount Amount of liquidity added
+     * @param own True if local liquidity was increased, false if external
+     */
+    event Liquidity_Changed(
         uint256 amount,
         bool own
     );
 
+    /**
+     * @notice Restricts function access to the owner
+     */
     modifier onlyOwner() {
         require(msg.sender == owner, "Not admin");
         _;
     }
-
 }
-
