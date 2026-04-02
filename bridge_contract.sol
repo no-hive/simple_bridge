@@ -19,7 +19,7 @@ interface IERC20 {
  * @dev Part of a system consisting of:
  *      - Owner contract: multisig wallet controlling the bridge
  *      - Federation contract: coordinates node consensus for transfers
- *      - Bridge contract: manages token custody and transfer execution
+ *      - Bridge contract: manages token custody and transfer execution (this contract)
  */
 contract Bridge {
 
