@@ -1,4 +1,4 @@
-This repository contains upgraded bridge smart contracts originally developed for the Capebridge by me and my teammates @cape4labs. Due to strict time constraints during the hackathon we built it for, the initial implementation lacks everything beside the basic functionality. 
+This repository contains upgraded bridge smart contracts originally developed for the Capebridge by me and my teammates @cape4labs. Due to strict time constraints during the hackathon we built it for, the initial implementation lacks everything beside the basic functionality. You can find original repository here - https://github.com/cape4labs/capebridge.
 
 After the hackathon, I began rewriting the contracts as a learning exercise, focusing on improving security, modularity, and maintainability. 
 
