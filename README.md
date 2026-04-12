@@ -1,11 +1,19 @@
-This repository contains upgraded bridge smart contracts originally developed for the Capebridge by me and my teammates @cape4labs. Due to strict time constraints during the hackathon we built it for, the initial implementation lacks everything beside the basic functionality. You can find original repository here - https://github.com/cape4labs/capebridge.
+### Introduction
 
-After the hackathon, I began rewriting the contracts as a learning exercise, focusing on improving security, modularity, and maintainability. 
+This code is the improved version of [capebridge](https://github.com/cape4labs/capebridge)'s smart contracts. This project was built for the hackathon, and due to strict time constraints during the hackathon we built it for, the initial implementation lacks everything besides the basic functionality. That's why after the hackathon, I began rewriting the contracts as a learning exercise.
 
-The contracts you see in this repo are designed as a simple cross-chain bridge that can operate between EVM-compatible L1 and L2 networks.
+### So what will you find in this repo?
 
-Note # 1: most of NatSpec comments in the code were written by the ai agents. 
+Two smart contracts that can operate between any EVM-compatible L1 and L2 networks. They work with existing tokens and does not use any minting or burning mechanics, that produces smth often called "wrapped tokens". 
 
-Note # 2: only up to 10% of code were written by the ai agents, and this % was carefully verified. 
+### What you won't find in this repo
 
-Note # 3: do not use this code for production before you condut extra security checks.
+The communication between contracts on different networks is up to a network of off-chain nodes. You can find them in original hackathon repo, linked above. There, it is built on Golang language, however, you can build your own version on any language - just make it run in docker container and make sure you understand that for mainnet version you will need independent operators and the mechanics.
+
+### Extra comments
+
+_**Note # 1**: Most of NatSpec comments in the code were written by the ai agents._
+
+_**Note # 2**: only up to 5% of code were written by the ai agents, and this % was carefully verified._
+
+_**Note # 3**: do use this code for production before you conduct extra security checks._
