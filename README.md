@@ -8,7 +8,7 @@ Two smart contracts that can operate between any EVM-compatible L1 and L2 networ
 
 ### What you won't find in this repo
 
-The communication between contracts on different networks is up to a network of off-chain nodes. You can find them in original hackathon repo, linked above. There, it is built on Golang language, however, you can build your own version on any language - just make it run in docker container and make sure you understand that for mainnet version you will need independent operators and the mechanics.
+The communication between contracts on different networks is up to a network of off-chain nodes. You can find them in original hackathon repo, linked above. There, it is built on Golang language, however, you can build your own version on any language - just make it run in docker container and make sure you understand that for mainnet version you will need independent operators network.
 
 ### Extra comments
 
@@ -17,3 +17,10 @@ _**Note # 1**: Most of NatSpec comments in the code were written by the ai agent
 _**Note # 2**: only up to 5% of code were written by the ai agents, and this % was carefully verified._
 
 _**Note # 3**: do use this code for production before you conduct extra security checks._
+
+              x|
+            |xx|     cape    |x|   bridge
+            |xx|             |x|
+            |xx|             |x|
+        ============|===============|===--
+       ~~~~~|xx|~~~~~~~~~~~~~|x|~~~ ~~  ~   ~
