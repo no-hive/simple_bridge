@@ -5,7 +5,7 @@
             |xx|        ~    |x| 
             |xx|             |x|                   If you ever use this code,
         ============|===============|===--               please, star this repo! *
-       ~~~~~|xx|~~~~~~~~~~~~~|x|~~~ ~~  ~   ~
+       ~~~~~|xx|~~~~~~~~~~~~~|x|~~~ ~~  ~   ~ ~~~  ~~ ~~~~ ~  ~~~  ~    ~~~  ~~~   ~~ 
 ### Introduction
 
 This code is the improved version of [capebridge](https://github.com/cape4labs/capebridge)'s smart contracts. This project was built for the hackathon, and due to strict time constraints during the hackathon we built it for, the initial implementation lacks everything besides the basic functionality. That's why after the hackathon, I began rewriting the contracts as a learning exercise.
