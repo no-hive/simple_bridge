@@ -3,8 +3,8 @@
             |xx|              x|   ~
             |xx|      ~      |x|
             |xx|        ~    |x| 
-            |xx|             |x|                   If you ever use this code,
-        ============|===============|===--               please, star this repo! *
+            |xx|             |x|                     If you ever use this code,
+        ============|===============|===--            please, star this repo!
        ~~~~~|xx|~~~~~~~~~~~~~|x|~~~ ~~  ~   ~ ~~~  ~~ ~~~~ ~  ~~~  ~    ~~~  ~~~   ~~ 
 ### Introduction
 
