@@ -1,8 +1,8 @@
 ## Simple cross-chain bridge between two EVM networks.
             
             |xx|              x|   ~
-            |xx|      ~      |x|                       If you ever use this code, please, star this repo! *
-            |xx|        ~    |x|
+            |xx|      ~      |x|               If you ever use this code,
+            |xx|        ~    |x|                    please, star this repo! *
             |xx|             |x|
         ============|===============|===--
        ~~~~~|xx|~~~~~~~~~~~~~|x|~~~ ~~  ~   ~
