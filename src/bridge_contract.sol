@@ -92,7 +92,7 @@ contract Bridge {
     // @param recipient Address that will receive tokens on the destination chain
     // @dev Requires sufficient liquidity on the external chain
     //      Emits a Request_Approved event for off-chain processing by federation nodes
-    function Deposit(uint256 amount, address recipient) external {
+    function Deposit(uint256 amount, address recipient) public {
         require(amount > 0, "Amount must be greater than zero");
         require(external_balance > amount, "Insufficient funds on destination chain");
 
@@ -110,7 +110,7 @@ contract Bridge {
     // @param recipient Address receiving the tokens
     // @param amount Amount of tokens to transfer
     // @dev Can only be called by the federation contract
-    function Transfer(address recipient, uint256 amount) external {
+    function Transfer(address recipient, uint256 amount) public {
         require(federation_contract == msg.sender, "Not federation contract");
 
         bool success = IERC20(token).transfer(recipient, amount);
@@ -127,7 +127,7 @@ contract Bridge {
     // @param amount Amount of tokens to add
     // @dev Transfers tokens from the owner to the contract and updates internal balance
 
-    function AddOwnLiquidity(uint256 amount) external onlyOwner {
+    function AddOwnLiquidity(uint256 amount) public onlyOwner {
         require(amount > 0, "Amount must be greater than zero");
 
         bool success = IERC20(token).transferFrom(msg.sender, address(this), amount);
@@ -142,7 +142,7 @@ contract Bridge {
     // @param amount Amount of liquidity to add
     // @dev Does not transfer tokens, only updates internal accounting
 
-    function AddExternalLiquidity(uint256 amount) external onlyOwner {
+    function AddExternalLiquidity(uint256 amount) public onlyOwner {
         require(amount > 0, "Amount must be greater than zero");
 
         external_balance += amount;
