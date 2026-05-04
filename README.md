@@ -1,19 +1,66 @@
-### Introduction
+## Foundry
 
-This code is the improved version of [capebridge](https://github.com/cape4labs/capebridge)'s smart contracts. This project was built for the hackathon, and due to strict time constraints during the hackathon we built it for, the initial implementation lacks everything besides the basic functionality. That's why after the hackathon, I began rewriting the contracts as a learning exercise.
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-### So what will you find in this repo?
+Foundry consists of:
 
-Two smart contracts that can operate between any EVM-compatible L1 and L2 networks. They work with existing tokens and does not use any minting or burning mechanics, that produces smth often called "wrapped tokens". 
+- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-### What you won't find in this repo
+## Documentation
 
-The communication between contracts on different networks is up to a network of off-chain nodes. You can find them in original hackathon repo, linked above. There, it is built on Golang language, however, you can build your own version on any language - just make it run in docker container and make sure you understand that for mainnet version you will need independent operators and the mechanics.
+https://book.getfoundry.sh/
 
-### Extra comments
+## Usage
 
-_**Note # 1**: Most of NatSpec comments in the code were written by the ai agents._
+### Build
 
-_**Note # 2**: only up to 5% of code were written by the ai agents, and this % was carefully verified._
+```shell
+$ forge build
+```
 
-_**Note # 3**: do use this code for production before you conduct extra security checks._
+### Test
+
+```shell
+$ forge test
+```
+
+### Format
+
+```shell
+$ forge fmt
+```
+
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```

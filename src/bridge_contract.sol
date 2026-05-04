@@ -22,7 +22,6 @@ interface IERC20 {
  *      - Bridge contract: manages token custody and transfer execution (this contract)
  */
 contract Bridge {
-
     /// @notice Multisig wallet address controlling the bridge
     address public owner;
 
@@ -69,7 +68,7 @@ contract Bridge {
         require(success, "transferFrom failed");
 
         external_balance -= amount;
-        own_balance      += amount;
+        own_balance += amount;
         nonce += 1;
 
         emit Request_Approved(msg.sender, amount, recipient, nonce);
@@ -137,12 +136,7 @@ contract Bridge {
      * @param recipient Destination address on the other chain
      * @param nonce Unique identifier of the request
      */
-    event Request_Approved(
-        address indexed sender,
-        uint256 amount,
-        address recipient,
-        uint256 nonce
-    );
+    event Request_Approved(address indexed sender, uint256 amount, address recipient, uint256 nonce);
 
     /**
      * @notice Emitted when the owner address is changed
@@ -150,31 +144,21 @@ contract Bridge {
      * @param previous_owner Previous owner address
      * @param new_owner New owner address
      */
-    event Owner_Changed(
-        uint256 block,
-        address previous_owner,
-        address new_owner
-    );
+    event Owner_Changed(uint256 block, address previous_owner, address new_owner);
 
     /**
      * @notice Emitted when tokens are successfully released to a recipient
      * @param amount Amount of tokens transferred
      * @param recipient Address receiving the tokens
      */
-    event Tokens_Released(
-        uint256 amount,
-        address recipient
-    );
+    event Tokens_Released(uint256 amount, address recipient);
 
     /**
      * @notice Emitted when liquidity is updated
      * @param amount Amount of liquidity added
      * @param own True if local liquidity was increased, false if external
      */
-    event Liquidity_Changed(
-        uint256 amount,
-        bool own
-    );
+    event Liquidity_Changed(uint256 amount, bool own);
 
     /**
      * @notice Restricts function access to the owner

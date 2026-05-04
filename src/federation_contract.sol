@@ -25,7 +25,6 @@ interface IBridge {
  *      - Bridge contract: manages token custody and transfer execution
  */
 contract FederationSync {
-
     /// @notice Address of federation node #1
     address public federation_node_1;
 
@@ -49,6 +48,7 @@ contract FederationSync {
      * Consensus is reached when at least 2 nodes submit identical values.
      */
     struct ConfirmedRequestData {
+
 
         /// @notice Whether the transfer has already been executed
         /// @dev Prevents double execution for the same nonce
@@ -132,11 +132,7 @@ contract FederationSync {
      * Security:
      * - Reentrancy-safe (state updated before external call)
      */
-    function confirmRequest(
-        address recipient,
-        uint256 amount,
-        uint256 nonce
-    ) external {
+    function confirmRequest(address recipient, uint256 amount, uint256 nonce) external {
         // implementation
     }
 
@@ -155,11 +151,7 @@ contract FederationSync {
      * - recipient
      * - amount
      */
-    function _hasConsensus(uint256 nonce)
-        internal
-        view
-        returns (bool hasConsensus, uint256 situation)
-    {
+    function _hasConsensus(uint256 nonce) internal view returns (bool hasConsensus, uint256 situation) {
         // implementation
     }
 
@@ -191,12 +183,7 @@ contract FederationSync {
      * @param amount Proposed amount
      * @param nonce Request identifier
      */
-    event RequestConfirmed(
-        address indexed confirmedBy,
-        address indexed recipient,
-        uint256 amount,
-        uint256 nonce
-    );
+    event RequestConfirmed(address indexed confirmedBy, address indexed recipient, uint256 amount, uint256 nonce);
 
     /**
      * @notice Emitted when transfer is executed after consensus
@@ -205,11 +192,7 @@ contract FederationSync {
      * @param amount Final amount
      * @param nonce Request identifier
      */
-    event TransferExecuted(
-        address indexed recipient,
-        uint256 amount,
-        uint256 nonce
-    );
+    event TransferExecuted(address indexed recipient, uint256 amount, uint256 nonce);
 
     /**
      * @notice Emitted when a federation node is updated
@@ -218,11 +201,7 @@ contract FederationSync {
      * @param changedBy Address performing the change
      * @param newAddress New node address
      */
-    event NodeChanged(
-        uint8 indexed nodeIndex,
-        address indexed changedBy,
-        address indexed newAddress
-    );
+    event NodeChanged(uint8 indexed nodeIndex, address indexed changedBy, address indexed newAddress);
 
     /**
      * @notice Restricts function access to owner
