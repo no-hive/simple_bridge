@@ -1,14 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.32;
 
-// @title ERC-20 Standard Interface
-// @notice Interface for interacting with ERC-20 tokens
-// @dev `transferFrom` moves tokens from a user to this contract (used in Deposit),
-//      `transfer` sends tokens from this contract to a recipient (used in Transfer)
-interface IERC20 {
-    function transferFrom(address from, address to, uint256 value) external returns (bool);
-    function transfer(address recipient, uint256 amount) external returns (bool);
-}
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 // @title ERC-20 Bridge Contract
 // @author no-hive (https://github.com/no-hive)
