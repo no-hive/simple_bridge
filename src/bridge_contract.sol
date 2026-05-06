@@ -72,6 +72,7 @@ contract Bridge {
     constructor(address _token) {
         own_balance = 0;
         external_balance = 0;
+        require(_token != address(0), "Invalid token address");
         token = _token;
         nonce = 0;
         owner = msg.sender;
@@ -86,7 +87,7 @@ contract Bridge {
     // @param recipient Address that will receive tokens on the destination chain
     // @dev Requires sufficient liquidity on the external chain
     //      Emits a Request_Approved event for off-chain processing by federation nodes
-    function Deposit(uint256 amount, address recipient) public {
+    function Deposit(uint256 amount, address recipient) external {
         require(amount > 0, "Amount must be greater than zero");
         require(external_balance > amount, "Insufficient funds on destination chain");
 
@@ -103,7 +104,7 @@ contract Bridge {
     // @param recipient Address receiving the tokens
     // @param amount Amount of tokens to transfer
     // @dev Can only be called by the federation contract
-    function Transfer(address recipient, uint256 amount) public {
+    function Transfer(address recipient, uint256 amount) external {
         require(federation_contract == msg.sender, "Not federation contract");
 
         IERC20(token).safeTransfer(recipient, amount);
@@ -119,7 +120,7 @@ contract Bridge {
     // @param amount Amount of tokens to add
     // @dev Transfers tokens from the owner to the contract and updates internal balance
 
-    function AddOwnLiquidity(uint256 amount) public onlyOwner {
+    function AddOwnLiquidity(uint256 amount) external onlyOwner {
         require(amount > 0, "Amount must be greater than zero");
 
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
@@ -133,7 +134,7 @@ contract Bridge {
     // @param amount Amount of liquidity to add
     // @dev Does not transfer tokens, only updates internal accounting
 
-    function AddExternalLiquidity(uint256 amount) public onlyOwner {
+    function AddExternalLiquidity(uint256 amount) external onlyOwner {
         require(amount > 0, "Amount must be greater than zero");
 
         external_balance += amount;
@@ -148,7 +149,7 @@ contract Bridge {
     // @notice Updates the owner (multisig) address
     // @param _owner New owner address
     // @dev Used for administrative control and key rotation
-    function ChangeOwner(address _owner) public onlyOwner {
+    function ChangeOwner(address _owner) external onlyOwner {
         owner = _owner;
 
         emit Owner_Changed(block.number, msg.sender, _owner);
