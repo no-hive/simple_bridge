@@ -57,7 +57,6 @@ contract FederationSync {
         // @notice Submitted amount per node
         uint256 first_conf_amount;
         uint256 second_conf_amount;
-
     }
 
     // @notice Mapping from Bridge nonce → request confirmation data
@@ -125,20 +124,6 @@ contract FederationSync {
     function _hasConsensus(uint256 nonce) internal view returns (bool hasConsensus, uint256 situation) {
         // implementation
     }
-
-    // @notice Updates federation node #1 address
-    // @param newAddress New node address
-    // @dev Only callable by owner
-    function changeNode1(address newAddress) external onlyOwner {}
-
-    // @notice Updates federation node #2 address
-    // @param newAddress New node address
-
-    function changeNode2(address newAddress) external onlyOwner {}
-
-    // @notice Updates federation node #3 address
-    // @param newAddress New node address
-    function changeNode3(address newAddress) external onlyOwner {}
 
     // @notice Emitted when a node confirms a request
     // @param confirmedBy Node address

@@ -146,16 +146,6 @@ contract Bridge {
     // MODIFIERS
     // ===================================
 
-    // @notice Updates the owner (multisig) address
-    // @param _owner New owner address
-    // @dev Used for administrative control and key rotation
-    function ChangeOwner(address _owner) external onlyOwner {
-        require(_owner != address(0), "Invalid token address");
-        owner = _owner;
-
-        emit Owner_Changed(block.number, msg.sender, _owner);
-    }
-
     // @notice Restricts function access to the owner
     modifier onlyOwner() {
         require(msg.sender == owner, "Not admin");
