@@ -107,8 +107,17 @@ contract FederationSync {
     //      2. Calls Bridge.Transfer()
     // Security:
     // - Reentrancy-safe (state updated before external call)
-    function confirmRequest(address recipient, uint256 amount, uint256 nonce) external {
-        // implementation
+    function confirmRequest(address _recipient, uint256 _amount, uint256 nonce) external {
+        // check that transfer is not executed.
+        //  if first_confirmation = true,
+        // update second_confirmation bool,
+        // second_conf_recipient = _recipient,
+        // second_conf_amount = _amount
+        // call consensus
+        //
+        // else update first_confirmation bool
+        // first_conf_recipient = _recipient,
+        //first_conf_amount = _amount
     }
 
     // @notice Checks whether at least 2 nodes agree on request data
@@ -122,7 +131,10 @@ contract FederationSync {
     // - recipient
     // - amount
     function _hasConsensus(uint256 nonce) internal view returns (bool hasConsensus, uint256 situation) {
-        // implementation
+        // check that transfer is not executed, and both bools are right.
+        // check first_conf_recipient == second_conf_recipient;
+        //check first_conf_amount == second_conf_amount;
+        // then call bridge contract with first data.
     }
 
     // @notice Emitted when a node confirms a request
