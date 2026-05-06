@@ -100,7 +100,9 @@ contract FederationSync {
         address _bridgeContract
     ) {
         require(_bridgeContract != address(0), "Invalid bridge");
-
+        require(_federation_node_1 != address(0), "Invalid node 1");
+        require(_federation_node_2 != address(0), "Invalid node 2");
+        require(_federation_node_3 != address(0), "Invalid node 3");
         federation_node_1 = _federation_node_1;
         federation_node_2 = _federation_node_2;
         federation_node_3 = _federation_node_3;

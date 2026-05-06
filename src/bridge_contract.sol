@@ -51,7 +51,7 @@ contract Bridge {
     address public federation_contract;
 
     // @notice ERC-20 token address handled by the bridge
-    address public token;
+    address public immutable token;
 
     // @notice Amount of tokens held on this chain
     uint256 public own_balance;
@@ -150,6 +150,7 @@ contract Bridge {
     // @param _owner New owner address
     // @dev Used for administrative control and key rotation
     function ChangeOwner(address _owner) external onlyOwner {
+        require(_owner != address(0), "Invalid token address");
         owner = _owner;
 
         emit Owner_Changed(block.number, msg.sender, _owner);
