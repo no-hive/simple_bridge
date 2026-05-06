@@ -11,6 +11,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 //      - Federation contract: coordinates node consensus for transfers
 //      - Bridge contract: manages token custody and transfer execution (this contract)
 contract Bridge {
+    using SafeERC20 for IERC20;
     //
     // ===================================
     // EVENTS
@@ -89,8 +90,7 @@ contract Bridge {
         require(amount > 0, "Amount must be greater than zero");
         require(external_balance > amount, "Insufficient funds on destination chain");
 
-        bool success = IERC20(token).transferFrom(msg.sender, address(this), amount);
-        require(success, "transferFrom failed");
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
 
         external_balance -= amount;
         own_balance += amount;
@@ -106,8 +106,7 @@ contract Bridge {
     function Transfer(address recipient, uint256 amount) public {
         require(federation_contract == msg.sender, "Not federation contract");
 
-        bool success = IERC20(token).transfer(recipient, amount);
-        require(success, "Token transfer failed");
+        IERC20(token).safeTransfer(recipient, amount);
 
         emit Tokens_Released(amount, recipient);
     }
@@ -123,8 +122,7 @@ contract Bridge {
     function AddOwnLiquidity(uint256 amount) public onlyOwner {
         require(amount > 0, "Amount must be greater than zero");
 
-        bool success = IERC20(token).transferFrom(msg.sender, address(this), amount);
-        require(success, "transferFrom failed");
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
 
         own_balance += amount;
 
