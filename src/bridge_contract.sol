@@ -51,7 +51,7 @@ contract Bridge {
     address public federation_contract;
 
     // @notice ERC-20 token address handled by the bridge
-    address public immutable token;
+    address public token;
 
     // @notice Amount of tokens held on this chain
     uint256 public own_balance;
