@@ -8,7 +8,7 @@ interface IBridge {
     // @notice Releases tokens to a recipient after consensus
     // @param recipient Address receiving tokens
     // @param amount Amount of tokens to transfer
-    function Transfer(address recipient, uint256 amount) external;
+    function safeTransfer(address recipient, uint256 amount) external;
 }
 
 // @title Bridge Federation Sync Contract
@@ -107,17 +107,18 @@ contract FederationSync {
     //      2. Calls Bridge.Transfer()
     // Security:
     // - Reentrancy-safe (state updated before external call)
-    function confirmRequest(address _recipient, uint256 _amount, uint256 nonce) external {
-        // check that transfer is not executed.
-        //  if first_confirmation = true,
-        // update second_confirmation bool,
-        // second_conf_recipient = _recipient,
-        // second_conf_amount = _amount
-        // call consensus
-        //
-        // else update first_confirmation bool
-        // first_conf_recipient = _recipient,
-        //first_conf_amount = _amount
+    function confirmRequest(address _recipient, uint256 _amount, uint256 _nonce) external {
+        require(transfer_made == false, "Already Executed");
+        if (first_confirmation == true) {
+            second_confirmation = true;
+            second_conf_recipient = _recipient;
+            second_conf_amount = _amount;
+        } else {
+            second_confirmation = true;
+            second_conf_recipient = _recipient;
+            second_conf_amount = _amount;
+            _hasConsensus(_nonce);
+        }
     }
 
     // @notice Checks whether at least 2 nodes agree on request data
@@ -132,9 +133,13 @@ contract FederationSync {
     // - amount
     function _hasConsensus(uint256 nonce) internal view returns (bool hasConsensus, uint256 situation) {
         // check that transfer is not executed, and both bools are right.
-        // check first_conf_recipient == second_conf_recipient;
-        //check first_conf_amount == second_conf_amount;
-        // then call bridge contract with first data.
+        require(transfer_made == false, "Already Executed");
+        require(first_confirmation == true, "Data Not Collected Yet");
+        require(second_confirmation == true, "Data Not Collected Yet");
+        require(first_conf_recipient == second_conf_recipient, "1");
+        require(first_conf_amount == second_conf_amount, "2");
+        IBridge(bridgeContract).safwTransfer(irst_conf_recipient, first_conf_amount);
+        emit TransferExecuted(first_conf_recipient, first_conf_amount, nonce);
     }
 
     // @notice Emitted when a node confirms a request
