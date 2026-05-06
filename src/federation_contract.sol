@@ -168,4 +168,9 @@ contract FederationSync {
         require(msg.sender == owner, "Not admin");
         _;
     }
+
+       modifier onlyNode() {
+        require(msg.sender == federation_node_1, federation_node_2, federation_node_3, "Not admin");
+        _;
+    }
 }
