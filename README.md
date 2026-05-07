@@ -1,7 +1,7 @@
 ![License](https://img.shields.io/github/license/no-hive/simple_bridge?style=flat)
 ![Last Commit](https://img.shields.io/github/last-commit/no-hive/simple_bridge?style=flat)
 ![Commit Count](https://img.shields.io/github/commit-activity/t/no-hive/simple_bridge?style=flat)
-![Testnet](https://img.shields.io/badge/testnet-tested-darkgreen?style=flat)
+![Testnet](https://img.shields.io/badge/testnet-untested-darkred?style=flat)
 ![Mainnet](https://img.shields.io/badge/mainnet-untested-darkred?style=flat)
 
 ## Simple cross-chain bridge between two EVM networks.
