@@ -57,6 +57,8 @@ contract FederationSync {
         // @notice Submitted amount per node
         uint256 first_conf_amount;
         uint256 second_conf_amount;
+
+        address already_confermer;
     }
 
     // @notice Mapping from Bridge nonce → request confirmation data
@@ -109,15 +111,17 @@ contract FederationSync {
     // - Reentrancy-safe (state updated before external call)
     function confirmRequest(address _recipient, uint256 _amount, uint256 _nonce) external {
         require(requests[_nonce].transfer_made == false, "Already Executed");
+
         if (requests[_nonce].first_confirmation == true) {
-            requests[_nonce].second_confirmation = true;
+            require(msg.sender != requests[_nonce].already_confermer, "already confirmed");
             requests[_nonce].second_conf_recipient = _recipient;
             requests[_nonce].second_conf_amount = _amount;
+            requests[_nonce].second_confirmation = true;
+            hasConsensus(_nonce);
         } else {
-            requests[_nonce].second_confirmation = true;
-            requests[_nonce].second_conf_recipient = _recipient;
-            requests[_nonce].second_conf_amount = _amount;
-            _hasConsensus(_nonce);
+            requests[_nonce].first_confirmation = true;
+            requests[_nonce].first_conf_recipient = _recipient;
+            requests[_nonce].first_conf_amount = _amount;
         }
     }
 
@@ -131,7 +135,7 @@ contract FederationSync {
     // Consensus requires exact match of:
     // - recipient
     // - amount
-    function _hasConsensus(uint256 _nonce) internal returns (bool hasConsensus, uint256 situation) {
+    function hasConsensus(uint256 _nonce) internal {
         // check that transfer is not executed, and both bools are right.
         require(requests[_nonce].transfer_made == false, "Already Executed");
         require(requests[_nonce].first_confirmation == true, "Data Not Collected Yet");
