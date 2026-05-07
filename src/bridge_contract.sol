@@ -148,7 +148,11 @@ contract Bridge {
 
     // @notice Restricts function access to the owner
     modifier onlyOwner() {
-        require(msg.sender == owner, "Not admin");
+        _onlyOwner();
         _;
+    }
+
+    function _onlyOwner() internal {
+        require(msg.sender == owner, "Not admin");
     }
 }
