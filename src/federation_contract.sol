@@ -108,15 +108,15 @@ contract FederationSync {
     // Security:
     // - Reentrancy-safe (state updated before external call)
     function confirmRequest(address _recipient, uint256 _amount, uint256 _nonce) external {
-        require(transfer_made == false, "Already Executed");
-        if (first_confirmation == true) {
-            second_confirmation = true;
-            second_conf_recipient = _recipient;
-            second_conf_amount = _amount;
+        require(requests[_nonce].transfer_made == false, "Already Executed");
+        if (requests[_nonce].first_confirmation == true) {
+            requests[_nonce].second_confirmation = true;
+            requests[_nonce].second_conf_recipient = _recipient;
+            requests[_nonce].second_conf_amount = _amount;
         } else {
-            second_confirmation = true;
-            second_conf_recipient = _recipient;
-            second_conf_amount = _amount;
+            requests[_nonce].second_confirmation = true;
+            requests[_nonce].second_conf_recipient = _recipient;
+            requests[_nonce].second_conf_amount = _amount;
             _hasConsensus(_nonce);
         }
     }
@@ -131,15 +131,15 @@ contract FederationSync {
     // Consensus requires exact match of:
     // - recipient
     // - amount
-    function _hasConsensus(uint256 nonce) internal view returns (bool hasConsensus, uint256 situation) {
+    function _hasConsensus(uint256 _nonce) internal returns (bool hasConsensus, uint256 situation) {
         // check that transfer is not executed, and both bools are right.
-        require(transfer_made == false, "Already Executed");
-        require(first_confirmation == true, "Data Not Collected Yet");
-        require(second_confirmation == true, "Data Not Collected Yet");
-        require(first_conf_recipient == second_conf_recipient, "1");
-        require(first_conf_amount == second_conf_amount, "2");
-        IBridge(bridgeContract).safwTransfer(irst_conf_recipient, first_conf_amount);
-        emit TransferExecuted(first_conf_recipient, first_conf_amount, nonce);
+        require(requests[_nonce].transfer_made == false, "Already Executed");
+        require(requests[_nonce].first_confirmation == true, "Data Not Collected Yet");
+        require(requests[_nonce].second_confirmation == true, "Data Not Collected Yet");
+        require(requests[_nonce].first_conf_recipient == requests[_nonce].second_conf_recipient, "1");
+        require(requests[_nonce].first_conf_amount == requests[_nonce].second_conf_amount, "2");
+        IBridge(bridgeContract).safeTransfer(requests[_nonce].first_conf_recipient, requests[_nonce].first_conf_amount);
+        emit TransferExecuted(requests[_nonce].first_conf_recipient, requests[_nonce].first_conf_amount, _nonce);
     }
 
     // @notice Emitted when a node confirms a request
@@ -170,7 +170,10 @@ contract FederationSync {
     }
 
     modifier onlyNode() {
-        require(msg.sender == federation_node_1, federation_node_2, federation_node_3, "Not admin");
+        require(
+            msg.sender == federation_node_1 || msg.sender == federation_node_2 || msg.sender == federation_node_3,
+            "Not admin"
+        );
         _;
     }
 }

@@ -152,7 +152,7 @@ contract Bridge {
         _;
     }
 
-    function _onlyOwner() view internal {
+    function _onlyOwner() internal view {
         require(msg.sender == owner, "Not admin");
     }
 }
