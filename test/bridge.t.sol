@@ -1,3 +1,5 @@
+pragma solidity ^0.8.33;
+
 import {Bridge} from "src/bridge_contract.sol";
 import {FederationSync} from "src/federation_contract.sol";
 import "forge-std/Test.sol";
