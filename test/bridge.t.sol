@@ -2,11 +2,13 @@ pragma solidity ^0.8.33;
 
 import {Bridge} from "src/bridge_contract.sol";
 import {FederationSync} from "src/federation_contract.sol";
+import {ExampleToken} from "test/example_token.sol";
 import "forge-std/Test.sol";
 
 contract BridgeTest is Test {
     Bridge public bridge;
     FederationSync public federationSync;
+    ExampleToken public exampleToken;
 
     // test addreses
     address TEST_TOKEN = address(1);
@@ -20,7 +22,9 @@ contract BridgeTest is Test {
 
     function setUp() public {
         vm.startPrank(OWNER);
-        bridge = new Bridge(TEST_TOKEN);
+        exampleToken = new ExampleToken(OWNER);
+        address exampleToken_address = address(exampleToken);
+        bridge = new Bridge(exampleToken_address);
         address bridge_address = address(bridge);
         federationSync = new FederationSync(TEST_NODE_1, TEST_NODE_2, TEST_NODE_3, bridge_address);
         address federationSync_address = address(federationSync);
@@ -34,8 +38,11 @@ contract BridgeTest is Test {
 
     function testDeposit() public {
         vm.startPrank(OWNER);
+        // send token both to user and to the contract
         bridge.AddExternalLiquidity(1000000000);
         vm.stopPrank();
+        address bridge_address = address(bridge);
+        bool approveBool = exampleToken.approve(bridge_address, TEST_AMOUNT);
         bridge.Deposit(TEST_AMOUNT, TEST_USER);
         assertEq(1, bridge.nonce());
         // check if event is emited - Request_Approved(mssg.sender, amount, recipient, nonce);
