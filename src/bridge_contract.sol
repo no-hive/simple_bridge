@@ -146,9 +146,9 @@ contract Bridge {
     // PERMISSIONS MANAGEMENT
     // ===================================
 
-    function updateFederationSyncAddress (address _new_address) external onlyOwner {
-     require(_new_address != address(0), "Invalid token address");
-    federation_contract = _new_address;
+    function updateFederationSyncAddress(address _new_address) external onlyOwner {
+        require(_new_address != address(0), "Invalid token address");
+        federation_contract = _new_address;
     }
     // ===================================
     // MODIFIERS
