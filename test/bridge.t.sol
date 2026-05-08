@@ -39,12 +39,15 @@ contract BridgeTest is Test {
     function testDeposit() public {
         vm.startPrank(OWNER);
         // send token both to user and to the contract
+        bool transferBool = exampleToken.transfer(TEST_USER, TEST_AMOUNT);
         bridge.AddExternalLiquidity(1000000000);
         vm.stopPrank();
+        vm.startPrank(TEST_USER);
         address bridge_address = address(bridge);
         bool approveBool = exampleToken.approve(bridge_address, TEST_AMOUNT);
         bridge.Deposit(TEST_AMOUNT, TEST_USER);
         assertEq(1, bridge.nonce());
+        vm.stopPrank();
         // check if event is emited - Request_Approved(mssg.sender, amount, recipient, nonce);
         // check balances updates
     }
