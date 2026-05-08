@@ -45,9 +45,12 @@ contract BridgeTest is Test {
         vm.startPrank(TEST_USER);
         address bridge_address = address(bridge);
         bool approveBool = exampleToken.approve(bridge_address, TEST_AMOUNT);
+        //      vm.expectEmit(true, false, false, true);
+        // emit Request_Approved(address sender, uint256 amount, address recipient, uint256 nonce);
         bridge.Deposit(TEST_AMOUNT, TEST_USER);
         assertEq(1, bridge.nonce());
         vm.stopPrank();
+        
         // check if event is emited - Request_Approved(mssg.sender, amount, recipient, nonce);
         // check balances updates
     }
