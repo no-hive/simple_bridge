@@ -18,5 +18,19 @@ contract BridgeTest is Test {
         bridge = new Bridge(TEST_TOKEN);
         address bridge_address = address(bridge);
         federationSync = new FederationSync(TEST_NODE_1, TEST_NODE_2, TEST_NODE_3, bridge_address);
+        // address federationSync_address = address(federationSync);
+        // update address in bridge contract
     }
+
+    // function testDeposit (uint256 amount, address recipient)
+    // check if event is emited - Request_Approved(mssg.sender, amount, recipient, nonce);
+    // check balances updates
+    // check nonce
+
+    // function testTransfer
+    // the same data is sent to federation sync by one node, then the first node tries to send again,
+    // then the second node sends wrong data, then the non autoritized send the right data, then the third node
+    // sends the right data
+    // function transfer to from the contract -
 }
+
