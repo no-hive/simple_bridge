@@ -8,18 +8,21 @@ contract BridgeTest is Test {
     Bridge public bridge;
     FederationSync public federationSync;
 
-    address TEST_TOKEN = 0x0000000000000000000000000000000000000001;
-
-    address TEST_NODE_1 = 0x0000000000000000000000000000000000000002;
-    address TEST_NODE_2 = 0x0000000000000000000000000000000000000003;
-    address TEST_NODE_3 = 0x0000000000000000000000000000000000000004;
+// test addreses
+    address TEST_TOKEN = address(1);
+    address TEST_NODE_1 = address(2);
+    address TEST_NODE_2 = address(3);
+    address TEST_NODE_3 = address(4);
+    address OWNER = address(5);
 
     function setUp() public {
+        vm.startPrank(OWNER);
         bridge = new Bridge(TEST_TOKEN);
         address bridge_address = address(bridge);
         federationSync = new FederationSync(TEST_NODE_1, TEST_NODE_2, TEST_NODE_3, bridge_address);
-        // address federationSync_address = address(federationSync);
-        // update address in bridge contract
+        address federationSync_address = address(federationSync);
+        bridge.updateFederationSyncAddress (federationSync_address);
+        vm.stopPrank();
     }
 
 function testDeployment() public {
