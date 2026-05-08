@@ -8,11 +8,11 @@ contract BridgeTest is Test {
     Bridge public bridge;
     FederationSync public federationSync;
 
-    address TEST_TOKEN = 0x0000000000000000000000000000000000000000;
+    address TEST_TOKEN = 0x0000000000000000000000000000000000000001;
 
-    address TEST_NODE_1 = 0x0000000000000000000000000000000000000000;
-    address TEST_NODE_2 = 0x0000000000000000000000000000000000000000;
-    address TEST_NODE_3 = 0x0000000000000000000000000000000000000000;
+    address TEST_NODE_1 = 0x0000000000000000000000000000000000000002;
+    address TEST_NODE_2 = 0x0000000000000000000000000000000000000003;
+    address TEST_NODE_3 = 0x0000000000000000000000000000000000000004;
 
     function setUp() public {
         bridge = new Bridge(TEST_TOKEN);
@@ -21,6 +21,10 @@ contract BridgeTest is Test {
         // address federationSync_address = address(federationSync);
         // update address in bridge contract
     }
+
+function testDeployment() public {
+    assertEq(address(bridge), federationSync.bridgeContract());
+}
 
     // function testDeposit (uint256 amount, address recipient)
     // check if event is emited - Request_Approved(mssg.sender, amount, recipient, nonce);
