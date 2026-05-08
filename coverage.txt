@@ -1,7 +1,7 @@
 Compiling 28 files with Solc 0.8.34
 installing solc version "0.8.34"
 Successfully installed solc 0.8.34
-Solc 0.8.34 finished in 1.01s
+Solc 0.8.34 finished in 769.12ms
 Compiler run successful with warnings:
 Warning (2018): Function state mutability can be restricted to view
   --> test/bridge.t.sol:25:1:
@@ -14,9 +14,9 @@ Running tests...
 
 Ran 1 test for test/bridge.t.sol:BridgeTest
 [PASS] testDeployment() (gas: 10216)
-Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 1.13ms (376.78µs CPU time)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 817.45µs (316.40µs CPU time)
 
-Ran 1 test suite in 8.51ms (1.13ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
+Ran 1 test suite in 7.72ms (817.45µs CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
 
 ╭-----------------------------+----------------+----------------+---------------+---------------╮
 | File                        | % Lines        | % Statements   | % Branches    | % Funcs       |
