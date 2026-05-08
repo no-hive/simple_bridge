@@ -1,7 +1,7 @@
-![License](https://img.shields.io/github/license/no-hive/simple_bridge?style=flat&color=purple)
+![License](https://img.shields.io/github/license/no-hive/simple_bridge?style=flat&color=darkgreen)
 ![Commit Count](https://img.shields.io/github/commit-activity/t/no-hive/simple_bridge?style=flat&color=blue)
 ![Last Commit](https://img.shields.io/github/last-commit/no-hive/simple_bridge?style=flat&color=blue)
-![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/no-hive/simple_bridge/gh-pages/coverage.json)
+![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/no-hive/simple_bridge/gh-pages/coverage.json?style=flat&color=purple)
 ![Testnet](https://img.shields.io/badge/testnet-untested-red?style=flat)
 ![Mainnet](https://img.shields.io/badge/mainnet-untested-red?style=flat)
 
