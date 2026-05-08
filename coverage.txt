@@ -1,29 +1,74 @@
-Compiling 28 files with Solc 0.8.34
-installing solc version "0.8.34"
-Successfully installed solc 0.8.34
-Solc 0.8.34 finished in 1.08s
+Compiling 48 files with Solc 0.8.35
+installing solc version "0.8.35"
+Successfully installed solc 0.8.35
+Solc 0.8.35 finished in 869.08ms
 Compiler run successful with warnings:
-Warning (2018): Function state mutability can be restricted to view
-  --> test/bridge.t.sol:25:1:
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:125:29:
+    |
+125 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, signature);
+    |                             ^^^^^^^^^^^^^^^^^^
+
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:134:29:
+    |
+134 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecoverCalldata(hash, signature);
+    |                             ^^^^^^^^^^^^^^^^^^
+
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:161:29:
+    |
+161 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, r, vs);
+    |                             ^^^^^^^^^^^^^^^^^^
+
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:203:29:
+    |
+203 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, v, r, s);
+    |                             ^^^^^^^^^^^^^^^^^^
+
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:273:26:
+    |
+273 |     function _throwError(RecoverError error, bytes32 errorArg) private pure {
+    |                          ^^^^^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+  --> test/bridge.t.sol:42:9:
    |
-25 | function testDeployment() public {
-   | ^ (Relevant source part starts here and spans across multiple lines).
+42 |         bool transferBool = exampleToken.transfer(TEST_USER, TEST_AMOUNT);
+   |         ^^^^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+  --> test/bridge.t.sol:47:9:
+   |
+47 |         bool approveBool = exampleToken.approve(bridge_address, TEST_AMOUNT);
+   |         ^^^^^^^^^^^^^^^^
+
+Warning (2018): Function state mutability can be restricted to view
+  --> test/bridge.t.sol:35:5:
+   |
+35 |     function testDeployment() public {
+   |     ^ (Relevant source part starts here and spans across multiple lines).
 
 Analysing contracts...
 Running tests...
 
-Ran 1 test for test/bridge.t.sol:BridgeTest
+Ran 2 tests for test/bridge.t.sol:BridgeTest
 [PASS] testDeployment() (gas: 10216)
-Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 1.00ms (345.90µs CPU time)
+[PASS] testDeposit() (gas: 145329)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 1.71ms (956.88µs CPU time)
 
-Ran 1 test suite in 7.88ms (1.00ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
+Ran 1 test suite in 7.90ms (1.71ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
 
-╭-----------------------------+----------------+----------------+---------------+---------------╮
-| File                        | % Lines        | % Statements   | % Branches    | % Funcs       |
-+===============================================================================================+
-| src/bridge_contract.sol     | 21.88% (7/32)  | 24.00% (6/25)  | 7.14% (1/14)  | 14.29% (1/7)  |
-|-----------------------------+----------------+----------------+---------------+---------------|
-| src/federation_contract.sol | 30.30% (10/33) | 32.14% (9/28)  | 14.29% (4/28) | 20.00% (1/5)  |
-|-----------------------------+----------------+----------------+---------------+---------------|
-| Total                       | 26.15% (17/65) | 28.30% (15/53) | 11.90% (5/42) | 16.67% (2/12) |
-╰-----------------------------+----------------+----------------+---------------+---------------╯
+╭-----------------------------+----------------+----------------+----------------+---------------╮
+| File                        | % Lines        | % Statements   | % Branches     | % Funcs       |
++================================================================================================+
+| src/bridge_contract.sol     | 74.29% (26/35) | 74.07% (20/27) | 37.50% (6/16)  | 75.00% (6/8)  |
+|-----------------------------+----------------+----------------+----------------+---------------|
+| src/federation_contract.sol | 30.30% (10/33) | 32.14% (9/28)  | 14.29% (4/28)  | 20.00% (1/5)  |
+|-----------------------------+----------------+----------------+----------------+---------------|
+| test/example_token.sol      | 100.00% (2/2)  | 100.00% (1/1)  | 100.00% (0/0)  | 100.00% (1/1) |
+|-----------------------------+----------------+----------------+----------------+---------------|
+| Total                       | 54.29% (38/70) | 53.57% (30/56) | 22.73% (10/44) | 57.14% (8/14) |
+╰-----------------------------+----------------+----------------+----------------+---------------╯
