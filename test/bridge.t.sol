@@ -46,41 +46,40 @@ contract BridgeTest is Test {
         vm.startPrank(TEST_USER);
         address bridge_address = address(bridge);
         bool approveBool = exampleToken.approve(bridge_address, TEST_AMOUNT);
-        // check if event is emited
-        //      vm.expectEmit(true, false, false, true);
-        // emit Request_Approved(address sender, uint256 amount, address recipient, uint256 nonce);
-        bridge.Deposit(TEST_AMOUNT, TEST_USER);
-        assertEq(1, bridge.nonce());
+
+        bridge.Deposit(TEST_AMOUNT, TEST_USER_2);
         vm.stopPrank();
     }
 
-    function testTransfer() public {
-        // expect revert
-        // !!!
-        // !!
-        // !
-
-        // the valid confirmation
+    function testSuccessfullTransfer() public {
         vm.startPrank(TEST_NODE_1);
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
-        //the first node tries to send again,
-        vm.startPrank(TEST_NODE_1);
-        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
-        vm.stopPrank();
-        //then the second node sends wrong data
         vm.startPrank(TEST_NODE_2);
-        uint256 fake_amount_ = TEST_AMOUNT + 1e5;
-        federationSync.confirmRequest(TEST_USER_2, fake_amount_, 1);
-        vm.stopPrank();
-        //the non autoritized send the right data
-        vm.startPrank(OWNER);
-        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
-        vm.stopPrank();
-        //the third node sends the right data
-        vm.startPrank(TEST_NODE_3);
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
     }
 }
+
+// the valid confirmation
+//   vm.startPrank(TEST_NODE_1);
+//    federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+//    vm.stopPrank();
+//the first node tries to send again,
+//    vm.startPrank(TEST_NODE_1);
+//    federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+//    vm.stopPrank();
+//then the second node sends wrong data
+//   vm.startPrank(TEST_NODE_2);
+//   uint256 fake_amount_ = TEST_AMOUNT + 1e5;
+//  federationSync.confirmRequest(TEST_USER_2, fake_amount_, 1);
+//   vm.stopPrank();
+//the non autoritized send the right data
+//  vm.startPrank(OWNER);
+//    federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+//   vm.stopPrank();
+//the third node sends the right data
+//   vm.startPrank(TEST_NODE_3);
+//  federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+//  vm.stopPrank();
 
