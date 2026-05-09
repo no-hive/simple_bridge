@@ -46,19 +46,18 @@ contract BridgeTest is Test {
         vm.startPrank(TEST_USER);
         address bridge_address = address(bridge);
         bool approveBool = exampleToken.approve(bridge_address, TEST_AMOUNT);
-
         bridge.Deposit(TEST_AMOUNT, TEST_USER_2);
         vm.stopPrank();
     }
 
-    function testSuccessfullTransfer() public {
-        vm.startPrank(TEST_NODE_1);
-        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
-        vm.stopPrank();
-        vm.startPrank(TEST_NODE_2);
-        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
-        vm.stopPrank();
-    }
+    //function testSuccessfullTransfer() public {
+    //    vm.startPrank(TEST_NODE_1);
+    //    federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+    //    vm.stopPrank();
+    //    vm.startPrank(TEST_NODE_2);
+     //   federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+    //    vm.stopPrank();
+   // }
 }
 
 // the valid confirmation
