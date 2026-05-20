@@ -1,7 +1,7 @@
 Compiling 48 files with Solc 0.8.35
 installing solc version "0.8.35"
 Successfully installed solc 0.8.35
-Solc 0.8.35 finished in 1.22s
+Solc 0.8.35 finished in 689.44ms
 Compiler run successful with warnings:
 Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
    --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:125:29:
@@ -54,21 +54,26 @@ Warning (2018): Function state mutability can be restricted to view
 Analysing contracts...
 Running tests...
 
-Ran 2 tests for test/bridge.t.sol:BridgeTest
-[PASS] testDeployment() (gas: 10216)
-[PASS] testDeposit() (gas: 146152)
-Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 1.81ms (682.10µs CPU time)
+Ran 7 tests for test/bridge.t.sol:BridgeTest
+[PASS] testConfirmation() (gas: 298852)
+[PASS] testConfirmationReverted_1() (gas: 230213)
+[PASS] testConfirmationReverted_2() (gas: 281185)
+[PASS] testConfirmationReverted_3() (gas: 233702)
+[PASS] testDeployment() (gas: 10260)
+[PASS] testDeposit() (gas: 146086)
+[PASS] testSuccessfullTransfer() (gas: 300871)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 2.22ms (4.08ms CPU time)
 
-Ran 1 test suite in 8.44ms (1.81ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
+Ran 1 test suite in 6.99ms (2.22ms CPU time): 7 tests passed, 0 failed, 0 skipped (7 total tests)
 
-╭-----------------------------+----------------+----------------+----------------+---------------╮
-| File                        | % Lines        | % Statements   | % Branches     | % Funcs       |
-+================================================================================================+
-| src/bridge_contract.sol     | 74.29% (26/35) | 74.07% (20/27) | 37.50% (6/16)  | 75.00% (6/8)  |
-|-----------------------------+----------------+----------------+----------------+---------------|
-| src/federation_contract.sol | 30.30% (10/33) | 32.14% (9/28)  | 14.29% (4/28)  | 20.00% (1/5)  |
-|-----------------------------+----------------+----------------+----------------+---------------|
-| test/example_token.sol      | 100.00% (2/2)  | 100.00% (1/1)  | 100.00% (0/0)  | 100.00% (1/1) |
-|-----------------------------+----------------+----------------+----------------+---------------|
-| Total                       | 54.29% (38/70) | 53.57% (30/56) | 22.73% (10/44) | 57.14% (8/14) |
-╰-----------------------------+----------------+----------------+----------------+---------------╯
+╭-----------------------------+----------------+----------------+----------------+----------------╮
+| File                        | % Lines        | % Statements   | % Branches     | % Funcs        |
++=================================================================================================+
+| src/bridge_contract.sol     | 85.71% (30/35) | 85.19% (23/27) | 43.75% (7/16)  | 87.50% (7/8)   |
+|-----------------------------+----------------+----------------+----------------+----------------|
+| src/federation_contract.sol | 94.12% (32/34) | 96.55% (28/29) | 60.71% (17/28) | 80.00% (4/5)   |
+|-----------------------------+----------------+----------------+----------------+----------------|
+| test/example_token.sol      | 100.00% (2/2)  | 100.00% (1/1)  | 100.00% (0/0)  | 100.00% (1/1)  |
+|-----------------------------+----------------+----------------+----------------+----------------|
+| Total                       | 90.14% (64/71) | 91.23% (52/57) | 54.55% (24/44) | 85.71% (12/14) |
+╰-----------------------------+----------------+----------------+----------------+----------------╯

@@ -109,7 +109,7 @@ contract FederationSync {
     //      2. Calls Bridge.Transfer()
     // Security:
     // - Reentrancy-safe (state updated before external call)
-    function confirmRequest(address _recipient, uint256 _amount, uint256 _nonce) external {
+    function confirmRequest(address _recipient, uint256 _amount, uint256 _nonce) external onlyNode {
         require(requests[_nonce].transfer_made == false, "Already Executed");
 
         if (requests[_nonce].first_confirmation == true) {
@@ -122,6 +122,7 @@ contract FederationSync {
             requests[_nonce].first_confirmation = true;
             requests[_nonce].first_conf_recipient = _recipient;
             requests[_nonce].first_conf_amount = _amount;
+            requests[_nonce].already_confermer = msg.sender;
         }
     }
 
@@ -176,7 +177,7 @@ contract FederationSync {
     modifier onlyNode() {
         require(
             msg.sender == federation_node_1 || msg.sender == federation_node_2 || msg.sender == federation_node_3,
-            "Not admin"
+            "Not node address"
         );
         _;
     }

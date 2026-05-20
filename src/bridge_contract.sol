@@ -104,7 +104,7 @@ contract Bridge {
     // @param recipient Address receiving the tokens
     // @param amount Amount of tokens to transfer
     // @dev Can only be called by the federation contract
-    function Transfer(address recipient, uint256 amount) external {
+    function safeTransfer(address recipient, uint256 amount) external {
         require(federation_contract == msg.sender, "Not federation contract");
 
         IERC20(token).safeTransfer(recipient, amount);
