@@ -56,30 +56,54 @@ contract BridgeTest is Test {
         vm.startPrank(TEST_NODE_1);
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
-        //the first node tries to send again.
-        vm.startPrank(TEST_NODE_1);
-         vm.expectRevert();
-         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
-         vm.stopPrank();
-        //then the second node sends wrong data
-         vm.startPrank(TEST_NODE_2);
-         uint256 fake_amount_ = TEST_AMOUNT + 1e5;
-         vm.expectRevert();
-         federationSync.confirmRequest(TEST_USER_2, fake_amount_, 1);
-         vm.stopPrank();
-        //the non autoritized send the right data
-         vm.startPrank(OWNER);
-         vm.expectRevert();
-         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
-         vm.stopPrank();
         //the third node sends the right data
         vm.startPrank(TEST_NODE_3);
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
     }
 
-// checks that Deposit --> Confirmations --> Transfer Cycle works
-        function testSuccessfullTransfer() public {
-            testConfirmation();
-     }
+    // the valid confirmation
+    function testConfirmationReverted_1() public {
+        testDeposit();
+        vm.startPrank(TEST_NODE_1);
+        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+        vm.stopPrank();
+        //the first node tries to send again.
+        vm.startPrank(TEST_NODE_1);
+        vm.expectRevert();
+        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+        vm.stopPrank();
+    }
+
+    function testConfirmationReverted_2() public {
+        testDeposit();
+        vm.startPrank(TEST_NODE_1);
+        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+        vm.stopPrank();
+        // then the second node sends wrong data
+        vm.startPrank(TEST_NODE_2);
+        uint256 fake_amount_ = TEST_AMOUNT + 1e5;
+        vm.expectRevert();
+        federationSync.confirmRequest(TEST_USER_2, fake_amount_, 1);
+        vm.stopPrank();
+    }
+
+    function testConfirmationReverted_3() public {
+        testDeposit();
+        vm.startPrank(TEST_NODE_1);
+        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+        vm.stopPrank();
+        //the non autoritized send the right data
+        vm.startPrank(OWNER);
+        vm.expectRevert();
+        federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
+        vm.stopPrank();
+    }
+
+    // checks that Deposit --> Confirmations --> Transfer Cycle works
+    function testSuccessfullTransfer() public {
+        testConfirmation();
+        uint256 balance_ = exampleToken.balanceOf(TEST_USER_2);
+        assertEq(balance_, TEST_AMOUNT);
+    }
 }
