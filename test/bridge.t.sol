@@ -10,17 +10,23 @@ contract BridgeTest is Test {
     FederationSync public federationSync;
     ExampleToken public exampleToken;
 
-    // test addreses
-    address TEST_TOKEN = address(1);
-    address TEST_NODE_1 = address(2);
-    address TEST_NODE_2 = address(3);
-    address TEST_NODE_3 = address(4);
-    address OWNER = address(5);
+    // test nodes addreses
+    address TEST_NODE_1 = address(1);
+    address TEST_NODE_2 = address(2);
+    address TEST_NODE_3 = address(3);
 
+    // test contract owner address
+    // in mainnet this should be Miltisig wallet run by node addresses.
+    address OWNER = address(4);
+
+    // test bridge transfer amount
     uint256 TEST_AMOUNT = 100000000;
+
+    // two test users: sender and receiver
     address TEST_USER = address(6);
     address TEST_USER_2 = address(7);
 
+    // this function set up the contracts, including test token contract
     function setUp() public {
         vm.startPrank(OWNER);
         exampleToken = new ExampleToken(OWNER);
@@ -33,10 +39,12 @@ contract BridgeTest is Test {
         vm.stopPrank();
     }
 
+    // here we test that the setup run correctly
     function testDeployment() public {
         assertEq(address(bridge), federationSync.bridgeContract());
     }
 
+    // test first step - deposit
     function testDeposit() public {
         vm.startPrank(OWNER);
         // send token both to user and to the contract
@@ -50,9 +58,10 @@ contract BridgeTest is Test {
         vm.stopPrank();
     }
 
-    // the valid confirmation
+    // test the valid confirmation
     function testConfirmation() public {
         testDeposit();
+        // the first node sends the right data
         vm.startPrank(TEST_NODE_1);
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
@@ -62,9 +71,11 @@ contract BridgeTest is Test {
         vm.stopPrank();
     }
 
-    // the valid confirmation
+    // test the invalid confirmation # 1
+    // must be reverted because one node tries to confirm twice
     function testConfirmationReverted_1() public {
         testDeposit();
+        // the first node sends the right data
         vm.startPrank(TEST_NODE_1);
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
@@ -75,8 +86,11 @@ contract BridgeTest is Test {
         vm.stopPrank();
     }
 
+    // test the invalid confirmation # 2
+    // must be reverted because node sends wrong data
     function testConfirmationReverted_2() public {
         testDeposit();
+        // the first node sends the right data
         vm.startPrank(TEST_NODE_1);
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
@@ -88,19 +102,23 @@ contract BridgeTest is Test {
         vm.stopPrank();
     }
 
+    // test the invalid confirmation # 3
+    // must be reverted because not a node sends confirmation
     function testConfirmationReverted_3() public {
         testDeposit();
+        // the first node sends the right data
         vm.startPrank(TEST_NODE_1);
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
-        //the non autoritized send the right data
+        //the non autoritized address send the right data
+        //even if it is the contract owner - it is not the node address
         vm.startPrank(OWNER);
         vm.expectRevert();
         federationSync.confirmRequest(TEST_USER_2, TEST_AMOUNT, 1);
         vm.stopPrank();
     }
 
-    // checks that Deposit --> Confirmations --> Transfer Cycle works
+    // checks that "Deposit --> Confirmations --> Transfer" Cycle works
     function testSuccessfullTransfer() public {
         testConfirmation();
         uint256 balance_ = exampleToken.balanceOf(TEST_USER_2);
