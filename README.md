@@ -30,11 +30,7 @@ The communication between contracts on different networks is up to a network of 
 
 <img width="2000" height="646" alt="image" src="https://github.com/user-attachments/assets/79f9925b-dcf0-4564-9b80-7599b259aff4" />
 
-### Extra comments
+-----------------
 
-_**Note # 1**: Most of NatSpec comments in the code were written by the ai agents._
-
-_**Note # 2**: only up to 5% of code were written by the ai agents, and even this small contribution was carefully verified._
-
-_**Note # 3**: do use this code for production before you conduct extra security checks._
-
+> [!WARNING]
+> This project is experimental, unaudited, and not intended for production use unless you conduct extra security checks.
